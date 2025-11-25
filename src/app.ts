@@ -35,8 +35,9 @@ app.get('/db-test', async (_req: Request, res: Response) => {
         const count = await prisma.user.count();
         logger.info(`Database check: Found ${count} users`);
         res.json({ status: 'Database connected', userCount: count });
-    } catch (error: any) {
-        logger.error(`Database connection failed: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Database connection failed: ${errorMessage}`);
         res.status(500).json({ error: 'Database connection failed' });
     }
 });

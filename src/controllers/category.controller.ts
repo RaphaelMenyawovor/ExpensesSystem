@@ -3,7 +3,7 @@ import { prisma } from '../config/db';
 import { createCategorySchema, updateCategorySchema } from '../validators/category.validator';
 import logger from '../utils/logger';
 
-export const createCategory = async (req: Request, res: Response): Promise<any> => {
+export const createCategory = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
 
@@ -33,14 +33,15 @@ export const createCategory = async (req: Request, res: Response): Promise<any> 
         logger.info(`Category created: ${category.name} (ID: ${category.id})`);
         return res.status(201).json(category);
 
-    } catch (error: any) {
-        logger.error(`Create Category error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Create Category error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 // all categories for user
-export const getCategories = async (req: Request, res: Response): Promise<any> => {
+export const getCategories = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
 
@@ -51,13 +52,14 @@ export const getCategories = async (req: Request, res: Response): Promise<any> =
 
         return res.json(categories);
 
-    } catch (error: any) {
-        logger.error(`Get Categories error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Get Categories error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
-export const updateCategory = async (req: Request, res: Response): Promise<any> => {
+export const updateCategory = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
         
@@ -86,13 +88,14 @@ export const updateCategory = async (req: Request, res: Response): Promise<any> 
 
         return res.json(updated);
 
-    } catch (error: any) {
-        logger.error(`Update Category error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Update Category error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
-export const deleteCategory = async (req: Request, res: Response): Promise<any> => {
+export const deleteCategory = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
         
@@ -119,7 +122,8 @@ export const deleteCategory = async (req: Request, res: Response): Promise<any> 
         if (error.code === 'P2003') {
             return res.status(400).json({ error: 'Cannot delete category because it is used in existing expenses' });
         }
-        logger.error(`Delete Category error: ${error.message}`);
+        const errorMessage = (error as Error).message;
+        logger.error(`Delete Category error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
