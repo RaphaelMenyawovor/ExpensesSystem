@@ -8,6 +8,7 @@ logs/
 # Ignore environment variable files
 .env
 .env.local
+.env.production
 .env.*.local
 
 # Ignore build output
