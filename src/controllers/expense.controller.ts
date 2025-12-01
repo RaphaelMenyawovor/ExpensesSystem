@@ -4,7 +4,7 @@ import { createExpenseSchema, updateExpenseSchema, getExpensesQuerySchema } from
 import logger from '../utils/logger';
 
 
-export const createExpense = async (req: Request, res: Response): Promise<any> => {
+export const createExpense = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
 
@@ -28,14 +28,15 @@ export const createExpense = async (req: Request, res: Response): Promise<any> =
         logger.info(`Expense created: ID ${expense.id} for User ${req.user.userId}`);
         return res.status(201).json(expense);
 
-    } catch (error: any) {
-        logger.error(`Create Expense error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Create Expense error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 // Get all expenses(paginated and filtered)
-export const getExpenses = async (req: Request, res: Response): Promise<any> => {
+export const getExpenses = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
 
@@ -91,14 +92,15 @@ export const getExpenses = async (req: Request, res: Response): Promise<any> => 
             },
         });
 
-    } catch (error: any) {
-        logger.error(`Get Expenses error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Get Expenses error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 // single expense(filter by id)
-export const getExpenseById = async (req: Request, res: Response): Promise<any> => {
+export const getExpenseById = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
         const { id } = req.params;
@@ -116,14 +118,15 @@ export const getExpenseById = async (req: Request, res: Response): Promise<any> 
 
         return res.json(expense);
 
-    } catch (error: any) {
-        logger.error(`Get Expense By ID error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Get Expense By ID error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 // Update expense
-export const updateExpense = async (req: Request, res: Response): Promise<any> => {
+export const updateExpense = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
         const { id } = req.params;
@@ -153,13 +156,14 @@ export const updateExpense = async (req: Request, res: Response): Promise<any> =
         logger.info(`Expense updated: ID ${id}`);
         return res.json(updated);
 
-    } catch (error: any) {
-        logger.error(`Update Expense error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Update Expense error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
-export const deleteExpense = async (req: Request, res: Response): Promise<any> => {
+export const deleteExpense = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
         const { id } = req.params;
@@ -179,8 +183,9 @@ export const deleteExpense = async (req: Request, res: Response): Promise<any> =
         logger.info(`Expense deleted: ID ${id}`);
         return res.json({ message: 'Expense deleted successfully' });
 
-    } catch (error: any) {
-        logger.error(`Delete Expense error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Delete Expense error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };

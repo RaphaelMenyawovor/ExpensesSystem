@@ -40,6 +40,8 @@ export const createCategory = async (req: Request, res: Response): Promise<Respo
     }
 };
 
+
+
 // all categories for user
 export const getCategories = async (req: Request, res: Response): Promise<Response> => {
     try {

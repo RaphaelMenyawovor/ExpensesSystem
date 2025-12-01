@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { prisma } from '../config/db';
 import logger from '../utils/logger';
 
-export const getMonthlyReport = async (req: Request, res: Response): Promise<any> => {
+export const getMonthlyReport = async (req: Request, res: Response): Promise<Response> => {
     try {
         if (!req.user) return res.sendStatus(401);
 
@@ -45,8 +45,9 @@ export const getMonthlyReport = async (req: Request, res: Response): Promise<any
             totalSpent: monthlyTotals.reduce((sum, m) => sum + m.total, 0)
         });
 
-    } catch (error: any) {
-        logger.error(`Monthly Report error: ${error.message}`);
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        logger.error(`Monthly Report error: ${errorMessage}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };

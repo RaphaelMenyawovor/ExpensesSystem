@@ -5,7 +5,6 @@ export const createExpenseSchema = z.object({
     description: z.string().optional(),
     date: z.coerce.date({
         error: "Date is required",
-        message: "Invalid date format",
     }),
     category: z.string().optional(),
 });
