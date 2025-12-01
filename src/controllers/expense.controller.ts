@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { prisma } from '../config/db';
 import { createExpenseSchema, updateExpenseSchema, getExpensesQuerySchema } from '../validators/expense.validator';
 import logger from '../utils/logger';
+import { Prisma } from '../../generated/prisma/client';
 
 
 export const createExpense = async (req: Request, res: Response): Promise<Response> => {
@@ -47,7 +48,8 @@ export const getExpenses = async (req: Request, res: Response): Promise<Response
 
         const { page, limit, startDate, endDate, minAmount, maxAmount, category } = parsed.data;
 
-        const where: any = {
+        // build where clause based on filters
+        const where: Prisma.ExpenseWhereInput = {
             userId: req.user.userId,
         };
 
@@ -72,6 +74,7 @@ export const getExpenses = async (req: Request, res: Response): Promise<Response
 
         const skip = (page - 1) * limit;
 
+        // fetch expenses and total count in parallel
         const [expenses, total] = await Promise.all([
             prisma.expense.findMany({
                 where,

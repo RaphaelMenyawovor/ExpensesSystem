@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { prisma } from '../config/db';
 import { createCategorySchema, updateCategorySchema } from '../validators/category.validator';
 import logger from '../utils/logger';
+import { Prisma } from '../../generated/prisma/client';
 
 export const createCategory = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -119,13 +120,16 @@ export const deleteCategory = async (req: Request, res: Response): Promise<Respo
         logger.info(`Category deleted: ID ${id}`);
         return res.json({ message: 'Category deleted successfully' });
 
-    } catch (error: any) {
-        // P2003 is a Prisma foreign key constraint error
-        if (error.code === 'P2003') {
-            return res.status(400).json({ error: 'Cannot delete category because it is used in existing expenses' });
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            // P2003 is a Prisma foreign key constraint error
+            if (error.code === 'P2003') {
+                return res.status(400).json({ error: 'Cannot delete category because it is used in existing expenses' });
+            }
         }
-        const errorMessage = (error as Error).message;
-        logger.error(`Delete Category error: ${errorMessage}`);
-        return res.status(500).json({ error: 'Internal server error' });
+            const errorMessage = (error as Error).message;
+            logger.error(`Delete Category error: ${errorMessage}`);
+            return res.status(500).json({ error: 'Internal server error' });
+
     }
 };
