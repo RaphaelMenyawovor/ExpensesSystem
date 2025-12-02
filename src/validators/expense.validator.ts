@@ -22,5 +22,5 @@ export const getExpensesQuerySchema = z.object({
 });
 
 export const getExpenseByIdParamsSchema = z.object({
-    id: z.number().int().positive({ message: "ID must be a positive integer" }),
+    id: z.coerce.number().int().positive({ message: "ID must be a positive integer" }),
 })
