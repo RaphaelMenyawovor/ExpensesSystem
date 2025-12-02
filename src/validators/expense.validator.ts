@@ -20,3 +20,7 @@ export const getExpensesQuerySchema = z.object({
     maxAmount: z.coerce.number().optional(),
     category: z.string().optional(),
 });
+
+export const getExpenseByIdParamsSchema = z.object({
+    id: z.number().int().positive({ message: "ID must be a positive integer" }),
+})

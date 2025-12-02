@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { prisma } from '../config/db';
-import { createExpenseSchema, updateExpenseSchema, getExpensesQuerySchema } from '../validators/expense.validator';
+import { createExpenseSchema, updateExpenseSchema, getExpensesQuerySchema, getExpenseByIdParamsSchema } from '../validators/expense.validator';
 import logger from '../utils/logger';
 import { Prisma } from '../../generated/prisma/client';
 
@@ -104,9 +104,18 @@ export const getExpenses = async (req: Request, res: Response): Promise<Response
 
 // single expense(filter by id)
 export const getExpenseById = async (req: Request, res: Response): Promise<Response> => {
+
+
     try {
         if (!req.user) return res.sendStatus(401);
-        const { id } = req.params;
+
+        const parsed = getExpenseByIdParamsSchema.safeParse(req.params);
+        if (!parsed.success) {
+            return res.status(400).json({ error: parsed.error.issues });
+        }
+
+
+        const { id } = parsed.data;
 
         const expense = await prisma.expense.findFirst({
             where: {
