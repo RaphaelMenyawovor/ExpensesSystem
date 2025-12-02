@@ -28,7 +28,8 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
         next();
 
     } catch (err) {
-        logger.warn('Invalid token.');
+        const errorMessage = (err as Error).message;
+        logger.warn(`Invalid token: ${errorMessage}`);
         return res.status(403).json({ error: 'Invalid or expired token.' });
     }
 };

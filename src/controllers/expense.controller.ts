@@ -48,7 +48,7 @@ export const getExpenses = async (req: Request, res: Response): Promise<Response
 
         const { page, limit, startDate, endDate, minAmount, maxAmount, category } = parsed.data;
 
-        // build where clause based on filters
+        // build where clause(based on filters)
         const where: Prisma.ExpenseWhereInput = {
             userId: req.user.userId,
         };

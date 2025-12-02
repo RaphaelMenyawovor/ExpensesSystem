@@ -12,7 +12,7 @@ const colors = {
   error: 'red',
   warn: 'yellow',
   info: 'green',
-  http: 'magenta',
+  http: 'blue', // i like blue better
   debug: 'white',
 };
 
